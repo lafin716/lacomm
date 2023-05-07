@@ -4,6 +4,11 @@ import TextLogo from "~/components/image/TextLogo.vue";
 definePageMeta({
   layout: "blank",
 });
+
+const client = useSupabaseAuthClient();
+const { data, error } = await client.auth.getSession();
+console.log("data", data);
+console.log("error", error);
 </script>
 <template>
   <div class="container">
@@ -35,6 +40,11 @@ definePageMeta({
                   계정 만들기</NuxtLink
                 >
               </span>
+              <div class="sso-area text-center my-3">
+                <div class="d-flex justify-center mt-3">
+                  <AuthSSO />
+                </div>
+              </div>
             </v-card-item>
           </v-card>
         </v-col>
@@ -48,5 +58,9 @@ definePageMeta({
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+.sso-area {
+  border-top: 1px solid #e0e0e0;
 }
 </style>

@@ -2,10 +2,12 @@
 import MenuList from "~/components/layout/MenuList.vue";
 import Footer from "~/components/layout/Footer.vue";
 import Header from "~/components/layout/Header.vue";
+import { useDisplay } from "vuetify";
 
-const drawer = ref(true);
+const mobile = useDisplay().mobile;
+const drawer = ref(!mobile.value);
 
-const meta = useSeoMeta({
+useSeoMeta({
   title: "LACOMM",
   description: "커뮤니티 사이트",
 });
@@ -21,7 +23,7 @@ const meta = useSeoMeta({
     </v-app-bar>
     <v-main>
       <v-container>
-        <nuxt />
+        <RouterView />
       </v-container>
     </v-main>
     <Footer></Footer>

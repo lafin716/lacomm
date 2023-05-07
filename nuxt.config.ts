@@ -11,5 +11,8 @@ export default defineNuxtConfig({
       "process.env.DEBUG": false,
     },
   },
-  modules: ["@nuxtjs/supabase"],
+  modules: ["@nuxtjs/supabase", "@pinia/nuxt"],
+  pinia: {
+    autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
+  },
 });

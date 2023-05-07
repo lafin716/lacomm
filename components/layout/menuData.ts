@@ -4,9 +4,4 @@ export const menuData = [
     icon: "mdi-home",
     path: "/",
   },
-  {
-    title: "About",
-    icon: "mdi-information",
-    path: "/about",
-  },
 ];

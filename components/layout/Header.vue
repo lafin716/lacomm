@@ -1,7 +1,9 @@
+<script setup lang="ts">
+import Avatar from "./Avatar.vue";
+</script>
 <template>
   <v-toolbar-title></v-toolbar-title>
   <v-spacer></v-spacer>
-  <v-btn text>로그인</v-btn>
+  <Avatar></Avatar>
 </template>
-<script setup lang="ts"></script>
 <style scoped></style>
