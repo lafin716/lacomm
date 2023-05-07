@@ -1,16 +1,20 @@
 <script setup lang="ts">
 import { useBbsStore } from "~/stores/bbs.store";
+import { BoardSchema } from "~/types/BoardSchema";
 
 const router = useRouter();
 const store = useBbsStore();
+const board = ref<BoardSchema>({
+  title: "",
+  content: "",
+});
 const save = async () => {
-  await store.createBoard();
-  if (store.error) {
-    alert(store.error);
+  const result = await store.createBoard(board.value);
+  if (!result) {
+    alert("저장에 실패했습니다.");
     return;
   }
 
-  alert("저장되었습니다.");
   router.push("/");
 };
 </script>
@@ -20,14 +24,14 @@ const save = async () => {
     <v-card-text>
       <form>
         <v-text-field
-          v-model="store.board.title"
+          v-model="board.title"
           label="제목"
           outlined
           dense
           required
         ></v-text-field>
         <v-textarea
-          v-model="store.board.content"
+          v-model="board.content"
           label="내용"
           outlined
           dense

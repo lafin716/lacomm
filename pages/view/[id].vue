@@ -1,38 +1,18 @@
-<script setup lang="ts">
-import { useBbsStore } from "~/stores/bbs.store";
-
-// 주소 path 에서 id 값을 가져온다.
-const route = useRoute();
-const router = useRouter();
-const id = route.params.id || "";
-
-const store = useBbsStore();
-const save = async () => {
-  await store.updateBoard();
-  if (store.error) {
-    alert("저장에 실패했습니다.");
-    return;
-  }
-
-  alert("저장되었습니다.");
-  router.push("/");
-};
-</script>
 <template>
   <v-card class="w-100">
     <v-card-title>게시글 수정</v-card-title>
     <v-card-text>
       <form>
-        <input type="hidden" v-model="store.board.id" />
+        <input type="hidden" v-model="board.id" />
         <v-text-field
-          v-model="store.board.title"
+          v-model="board.title"
           label="제목"
           outlined
           dense
           required
         ></v-text-field>
         <v-textarea
-          v-model="store.board.content"
+          v-model="board.content"
           label="내용"
           outlined
           dense
@@ -44,4 +24,45 @@ const save = async () => {
     </v-card-text>
   </v-card>
 </template>
+<script lang="ts">
+import { useRoute } from "vue-router";
+import { useBbsStore } from "~/stores/bbs.store";
+import { BoardSchema } from "~/types/BoardSchema";
+
+export default {
+  name: "View",
+  async asyncData() {
+    const store = useBbsStore();
+    const route = useRoute();
+    const id = route.params.id || "";
+    await store.fetchBoard(id);
+    this.board = store.board;
+  },
+  async mounted() {
+    const store = useBbsStore();
+    const route = useRoute();
+    const id = route.params.id || "";
+    await store.fetchBoard(id);
+    this.board = store.board;
+  },
+  data() {
+    return {
+      board: <BoardSchema>{},
+    };
+  },
+  methods: {
+    async save() {
+      const store = useBbsStore();
+      const result = await store.updateBoard(this.board);
+      if (!result) {
+        alert("저장에 실패했습니다.");
+        return;
+      }
+
+      const router = useRouter();
+      router.push("/");
+    },
+  },
+};
+</script>
 <style scoped></style>
