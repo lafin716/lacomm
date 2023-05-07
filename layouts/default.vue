@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import MenuList from "~/components/layout/MenuList.vue";
-import Footer from "~/components/layout/Footer.vue";
 import Header from "~/components/layout/Header.vue";
 import { useDisplay } from "vuetify";
 
@@ -22,10 +21,15 @@ useSeoMeta({
       <Header></Header>
     </v-app-bar>
     <v-main>
-      <v-container>
+      <v-container
+        class="d-flex justify-center align-top"
+        style="min-height: 500px"
+      >
         <RouterView />
       </v-container>
+      <v-footer class="px-4 py-2 bg-grey text-center w-100">
+        Copyrights lafin {{ new Date().getFullYear() }}
+      </v-footer>
     </v-main>
-    <Footer></Footer>
   </v-layout>
 </template>

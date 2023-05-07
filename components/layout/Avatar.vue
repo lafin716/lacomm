@@ -50,9 +50,9 @@ const logout = async () => {
             {{ avatar.email }}
           </p>
           <v-divider class="my-3"></v-divider>
-          <v-btn rounded variant="text"> 계정설정 </v-btn>
+          <v-btn variant="text"> 계정설정 </v-btn>
           <v-divider class="my-3"></v-divider>
-          <v-btn rounded variant="text" @click="logout"> 로그아웃 </v-btn>
+          <v-btn variant="text" @click="logout"> 로그아웃 </v-btn>
         </div>
       </v-card-text>
     </v-card>
