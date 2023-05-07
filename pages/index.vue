@@ -1,12 +1,7 @@
 <script setup lang="ts">
-const supabase = useSupabaseClient();
-const { data } = await useAsyncData("bbs", async () => {
-  const { data } = await supabase.from("bbs").select("*");
-  return data;
-});
-console.log("bbs data", data.value);
+import { BoardSchema } from "@/types/BoardSchema";
+import { useBbsStore } from "~/stores/bbs.store";
 
-const itemsPerPage = ref(10);
 const headers = [
   { title: "NO", align: "start", value: "id" },
   { title: "제목", align: "start", value: "title" },
@@ -14,11 +9,37 @@ const headers = [
   { title: "등록일자", align: "start", value: "created_at" },
   { title: "수정일자", align: "start", value: "updated_at" },
 ];
-const list = computed(() => {
-  if (!data.value) return [];
 
-  return data.value;
+const store = useBbsStore();
+const router = useRouter();
+store.fetchBoards();
+const list: BoardSchema[] | any = computed(() => {
+  if (!store.boards) {
+    return [];
+  }
+
+  return store.boards;
 });
+
+const goView = async (id: string) => {
+  await store.fetchBoard(id);
+  router.push(`/view/${id}`);
+};
+
+const remove = async (id: string) => {
+  if (!confirm("삭제하시겠습니까?")) {
+    return;
+  }
+
+  await store.deleteBoard(id);
+  if (store.error) {
+    alert("삭제에 실패했습니다.");
+    return;
+  }
+
+  alert("삭제되었습니다.");
+  await store.fetchBoards();
+};
 </script>
 <template>
   <v-card class="w-100">
@@ -27,20 +48,47 @@ const list = computed(() => {
       <div class="btn-wrap">
         <v-btn color="primary" text to="/add"> 글쓰기 </v-btn>
       </div>
-      <v-data-table
-        v-model:items-per-page="itemsPerPage"
-        :headers="headers"
-        :items="list"
-        class="elevation-1"
-      >
-        <template v-slot:items="props">
-          <td>{{ props.item.id }}</td>
-          <td>{{ props.item.title }}</td>
-          <td>{{ props.item.user_name }}</td>
-          <td>{{ props.item.created_at }}</td>
-          <td>{{ props.item.updated_at }}</td>
-        </template>
-      </v-data-table>
+      <v-table>
+        <thead>
+          <tr>
+            <th v-for="header in headers" :key="header.value">
+              {{ header.title }}
+            </th>
+            <th>관리</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in list" :key="item.id">
+            <td>{{ item.id }}</td>
+            <td>
+              <a @click="goView(item.id)">{{ item.title }}</a>
+            </td>
+            <td>{{ item.user_name }}</td>
+            <td>{{ item.created_at }}</td>
+            <td>{{ item.updated_at }}</td>
+            <td>
+              <v-btn
+                icon="mdi-pencil"
+                color="success"
+                text
+                @click="goView(item.id)"
+                size="small"
+                class="text-white mr-2"
+              >
+              </v-btn>
+              <v-btn
+                icon="mdi-trash-can"
+                color="error"
+                text
+                @click="remove(item.id)"
+                size="small"
+                class="text-white"
+              >
+              </v-btn>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
     </v-card-text>
   </v-card>
 </template>

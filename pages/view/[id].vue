@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { useBbsStore } from "~/stores/bbs.store";
 
+// 주소 path 에서 id 값을 가져온다.
+const route = useRoute();
 const router = useRouter();
+const id = route.params.id || "";
+
 const store = useBbsStore();
 const save = async () => {
-  await store.createBoard();
+  await store.updateBoard();
   if (store.error) {
-    alert(store.error);
+    alert("저장에 실패했습니다.");
     return;
   }
 
@@ -16,9 +20,10 @@ const save = async () => {
 </script>
 <template>
   <v-card class="w-100">
-    <v-card-title>게시판 글쓰기</v-card-title>
+    <v-card-title>게시글 수정</v-card-title>
     <v-card-text>
       <form>
+        <input type="hidden" v-model="store.board.id" />
         <v-text-field
           v-model="store.board.title"
           label="제목"
