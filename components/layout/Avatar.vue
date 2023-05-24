@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useAuthStore } from "~/stores/auth.store";
+
 const user = useSupabaseUser();
 const avatar = computed(() => {
   if (!user.value) return {};
@@ -12,17 +14,7 @@ const avatar = computed(() => {
   };
 });
 
-const router = useRouter();
-const client = useSupabaseAuthClient();
-const logout = async () => {
-  const { error } = await client.auth.signOut();
-  if (error) {
-    console.error(error);
-    return alert(error.message);
-  }
-
-  return router.push("/");
-};
+const authStore = useAuthStore();
 </script>
 <template>
   <v-menu min-width="200px" rounded>
@@ -52,7 +44,7 @@ const logout = async () => {
           <v-divider class="my-3"></v-divider>
           <v-btn variant="text"> 계정설정 </v-btn>
           <v-divider class="my-3"></v-divider>
-          <v-btn variant="text" @click="logout"> 로그아웃 </v-btn>
+          <v-btn variant="text" @click="authStore.logout()"> 로그아웃 </v-btn>
         </div>
       </v-card-text>
     </v-card>

@@ -1,22 +1,21 @@
 <script setup lang="ts">
-const client = useSupabaseAuthClient();
-const router = useRouter();
-const login = async (provider: "github" | "google" | "facebook") => {
-  const { data, error } = await client.auth.signInWithOAuth({ provider });
-  if (error) {
-    console.error(error);
-    return alert(error.message);
-  }
+import { useAuthStore } from "~/stores/auth.store";
 
-  console.log(data);
-  // return router.push("/");
-};
+const authStore = useAuthStore();
 </script>
 <template>
   <div class="icon-wrap">
-    <v-btn icon="mdi-google" color="red" @click="login('google')"></v-btn>
-    <v-btn icon="mdi-facebook" color="blue" @click="login('facebook')"></v-btn>
-    <v-btn icon="mdi-github" @click="login('github')"></v-btn>
+    <v-btn
+      icon="mdi-google"
+      color="red"
+      @click="authStore.login('google')"
+    ></v-btn>
+    <v-btn
+      icon="mdi-facebook"
+      color="blue"
+      @click="authStore.login('facebook')"
+    ></v-btn>
+    <v-btn icon="mdi-github" @click="authStore.login('github')"></v-btn>
   </div>
 </template>
 <style scoped>

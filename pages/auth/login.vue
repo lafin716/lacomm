@@ -4,11 +4,6 @@ import TextLogo from "~/components/image/TextLogo.vue";
 definePageMeta({
   layout: "blank",
 });
-
-const client = useSupabaseAuthClient();
-const { data, error } = await client.auth.getSession();
-console.log("data", data);
-console.log("error", error);
 </script>
 <template>
   <div class="container">
